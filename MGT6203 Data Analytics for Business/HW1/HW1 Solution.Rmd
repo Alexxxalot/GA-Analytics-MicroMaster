@@ -1,0 +1,302 @@
+---
+title: "HW1 Solution & Self Assessment1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# SelfAssessment 1 #
+
+```{r}
+library("ISLR")
+data("Carseats")
+```
+
+```{r}
+str(Carseats)
+```
+```{r}
+summary(Carseats)
+```
+
+
+
+### For Questions 1-4: Create a linear regression model (using the lm function) with Sales as the dependent variable and Price as the independent variable. ###
+```{r}
+lm_s1 = lm(Sales~Price, data=Carseats)
+```
+
+```{r}
+summary(lm_s1)
+```
+
+#### 1. What is this model’s adjusted R-squared value? ####
+```{r}
+summary(lm_s1)$adj.r.squared
+```
+
+#### 2. Based on the model in Question 1, what is the estimated Coefficient of Price? ####
+```{r}
+summary(lm_s1)$coefficients
+```
+```{r}
+summary(lm_s1)$coefficients[2]
+```
+
+#### 3.Based on the model in Question 1, what is the t-value of the Coefficient of Price? ####
+```{r}
+summary(lm_s1)$coefficients[6]
+```
+
+
+### For Questions 5-8, please estimate a linear regression model (using the lm function) with Sales as the dependent variable and Price, Bad_Shelf, and Good_Shelf as independent variables. ###
+
+
+```{r}
+Carseats$Bad_Shelf<-ifelse(Carseats$ShelveLoc=="Bad",1,0)
+Carseats$Good_Shelf<-ifelse(Carseats$ShelveLoc=="Good",1,0)
+```
+
+```{r}
+colnames(Carseats)
+```
+
+
+```{r}
+lm_s2 = lm(Sales~Price + Bad_Shelf + Good_Shelf, data=Carseats)
+summary(lm_s2)
+```
+
+
+#### What is this model’s coefficient for "Bad_Shelf"? ####
+```{r}
+summary(lm_s2)$coefficients[3]
+```
+
+#### Using the fitted model in Question 5, what is the estimated value of Sales for an observation with Price =0 and ShelveLoc = “Medium?" ####
+
+```{r}
+summary(lm_s2)$coefficients[1]
+```
+
+#### Using the fitted model in Question 5, what is the estimated value of Sales for an observation with Price =0 and ShelveLoc = “Bad”? ####
+
+```{r}
+summary(lm_s2)$coefficients[1]+summary(lm_s2)$coefficients[3]
+```
+
+### For questions 9-12, use the file PriceDemand.csv. Download it from here: https://www.dropbox.com/s/62jev2rnapxq6pw/PriceDemand.csv?dl=0 (Links to an external site.) ###
+
+### Background information: A consumer packaged goods firm is studying the sales of its flagship brand of laundry detergent, CleanPill. We have weekly data over a 50-week period on units sold and retail price (in dollars) in a dataset called PriceDemand.###
+
+### Code to load the data set:  PriceDemand = read.csv("PriceDemand.csv", header = TRUE) ###
+
+### Fit a linear regression model with Qty as the response variable and Price as the explanatory variable. ###
+
+```{r}
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/MS Analytics/GT OMSA/SP20 MGMT 6203/HW1")
+df_pd <- read.csv("PriceDemand.csv", header=TRUE)
+```
+
+```{r}
+lm_s3 = lm(Qty~Price, data=df_pd)
+summary(lm_s3)
+```
+
+```{r}
+plot(lm_s3)
+```
+
+
+
+#### What is the interpretation for the coefficient of price? ####
+
+```{r}
+summary(lm_s3)$coefficients[2]
+```
+
+#### Fit a linear-log model by transforming Price into a new variable, Price_ln, to get the regression model: Qty= b0 + b1*ln(Price).  What is the interpretation for the coefficient b1? ####
+
+```{r}
+df_pd$Price_ln <- log(df_pd$Price)
+lm_s4 = lm(Qty~Price_ln, data=df_pd)
+summary(lm_s4)
+```
+
+```{r}
+df_pd$Qty_ln <- log(df_pd$Qty)
+lm_s5 = lm(Qty_ln~Price, data=df_pd)
+summary(lm_s5)
+```
+Interpretation of the estimated coefficient b1 is that a one-unit increase in X will produce an expected increase in log Y of b1 units. In terms of Y itself, this means that the expected value of Y is multiplied by e^b1.
+For small values of b1, approximately e^b1 ≈ 1+b1. We can use this for the following approximation for a quick interpretation of the coefficients: 100*b1 is the expected percentage change in Y for a unit increase in X.
+
+
+
+```{r}
+lm_s6 = lm(Qty_ln~Price_ln, data=df_pd)
+summary(lm_s6)
+```
+Increasing log(Price) by 0.01 changes log(Qty) by b1 * 0.01 units which implies increasing Price by 1% changes Qty by b1 
+
+
+
+# Homework Solution 1#
+
+The National Traffic Study Institute is conducting a study to find out the relationship between the speed at which the car is moving and the distance it takes to stop after applying the brakes. You were hired as a statistician to work on this problem. 
+
+```{r}
+library(Ecdat)
+data(cars)
+str(cars)
+```
+
+#### 1. Let’s try to find out if there is a correlation between the distance needed to stop and the speed at which the car is moving. What correlation value do you find when doing this in R? ####
+
+```{r}
+cor(cars$speed, cars$dist)
+
+```
+Answer is 0.81
+
+
+## 2 
+What is the percent variation in distance explained by speed, intercept, coefficient of speed?
+
+```{r}
+lm_1 = lm(dist ~ speed, data=cars)
+summary(lm_1)
+```
+Answer is 0.65, -17.58, 3.93
+
+## 3
+Change dist from feet to meters, speed from mph to meters per second
+Answer of 2
+
+```{r}
+cars$speed_ms = cars$speed*1600/60/60
+cars$dist_m = cars$dist/3.2808
+
+lm_2 = lm(dist_m ~ speed_ms, data=cars)
+summary(lm_2)
+```
+
+## 4
+speed = 7.5m/s, predicted distance and also the lower and upper bound for the 90% confidence interval
+
+```{r}
+new.data <- data.frame(speed_ms=7.5)
+predict.lm(lm_2, new.data, interval='predict', level=0.90)
+```
+
+## 5
+Your boss is not happy with the intercept term (Can you guess why?) and asks you to try dropping it. Let’s drop the intercept as your boss asked. Which of the following finding will you report back to boss concerning the percentage of variation explained by the model?
+
+Answer:
+B.	In the R output, the percentage of variation explained increases but this does not mean a better fit as percentage of variation explained is artificially inflated in R output when you remove the intercept term. correct
+
+#### Q11
+```{r}
+9.12*10**(-4)*45*1000+1.95*10**(-2)*1000
+
+```
+```{r}
+1.95*10**(-2)*1000
+
+```
+```{r}
+45000*9.12*0.0001
+```
+```{r}
+(65.5-19.5)/45/1000
+```
+
+
+####Q12
+
+```{r}
+# install.packages("car")
+# install.packages("tidyverse")
+
+library(tidyverse)
+library(carData)
+library(car)
+Salaries_Dataset <- as_tibble(carData::Salaries) #Lecture simply says "as.tibble(Salaries)"
+```
+
+
+
+```{r}
+str(Salaries_Dataset)
+```
+
+```{r}
+levels(Salaries_Dataset$rank)
+```
+
+
+```{r}
+# Create dummy variables as indicator
+Salaries_Dataset$AssocProf<-ifelse(Salaries_Dataset$rank=="AssocProf",1,0)
+Salaries_Dataset$Prof<-ifelse(Salaries_Dataset$rank=="Prof",1,0)
+
+# Create LM model
+lm_3 <- lm(data=Salaries_Dataset, salary~yrs.service+AssocProf+Prof)
+summary(lm_3)
+```
+
+```{r}
+library(MASS)
+dat <- Boston
+head(dat)
+```
+
+```{r}
+model_lm <- lm(data=dat, medv ~ crim+zn+chas+nox+rm+dis+rad+tax+ptratio+black+lstat)
+plot(model_lm)
+```
+
+```{r}
+shapiro.test(residuals(model_lm))
+```
+
+
+```{r}
+require(lmtest)
+dwtest(model_lm)
+```
+
+## 17 - 20
+```{r}
+EDSAL <- read.csv('EDSAL.csv', header=TRUE)
+
+str(EDSAL)
+
+```
+
+
+```{r}
+m1 <- lm(Salary ~ Experience, data = EDSAL)
+summary(m1)
+```
+
+```{r}
+m2 <- lm(Salary ~ log(Experience), data = EDSAL)
+summary(m2)
+
+```
+```{r}
+m3 <- lm(log(Salary) ~ Experience, data = EDSAL)
+summary(m3)
+
+```
+```{r}
+m4 <- lm(log(Salary) ~ log(Experience), data = EDSAL)
+summary(m4)
+
+```
+
+
+

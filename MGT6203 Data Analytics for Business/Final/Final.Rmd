@@ -1,0 +1,101 @@
+---
+title: "Final"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd('/Users/alex/Library/Mobile Documents/com~apple~CloudDocs/MS Analytics/GT OMSA/SP20 MGMT 6203/Final/')
+```
+
+```{r}
+# packages
+
+library(dplyr)
+library(caret)
+library(xts)
+library(PerformanceAnalytics)
+
+```
+
+
+```{r}
+df <- read.csv('direct_marketing.csv', header=TRUE)
+
+str(df)
+head(df, 10)
+
+```
+
+We are interested in the effects of categorical variable ‘Gender’ and numerical variable ‘Salary’ on 'AmountSpent’. After running the linear regression of ‘AmountSpent’ on ‘Gender’ and ‘Salary’,
+
+```{r}
+lm_1 <- lm(AmountSpent~Gender+Salary, data=df)
+summary(lm_1)
+```
+
+Convert the Married column into a dummy variable with ‘Married’ being 1 and ‘Single’ being 0.  Now create another model for AmountSpent regressed against Gender, Salary and Married. Based off your model, how much more (or less) would a married person spend than a single person? (Assume arbitrary units)
+
+```{r}
+df <- df %>% 
+  mutate(Married_v = as.factor(if_else(Married=='Married',1,0)))
+
+lm_2 <- lm(AmountSpent~Gender+Salary+Married_v, data=df)
+summary(lm_2)
+
+```
+
+```{r}
+library(MASS)
+```
+
+```{r}
+str(Boston)
+```
+
+```{r}
+df_2 <- Boston %>% 
+  mutate(medv = as.factor(if_else(medv>30,1,0)))
+
+glm_3 <- glm(medv~., data = df_2, family = 'binomial')
+summary(glm_3)
+```
+3. 
+A. If rm increases by 1 unit, the natural log of the odds of the house median value being greater than $30,000 increases by 2.3549.
+
+4.What is the Sensitivity of the model?
+
+```{r}
+df_2$predict_result <- predict(glm_3, df_2, type='response')
+df_2$predict_medv <- as.factor(if_else(df_2$predict_result>0.5,1,0))
+
+
+confusionMatrix(df_2$predict_medv, df_2$medv, dnn=c("Prediction", "Reference"), positive='1')
+
+
+```
+
+5.What is the AUC (Area Under the Curve) for this model?
+
+```{r}
+library(ROCR)
+
+#ROC Curve
+pred <- prediction(df_2$predict_result,df_2$medv) 
+class(pred)
+# calculate Area Under the Curve for this Logit Model
+auc.perf <-  performance(pred, measure = "auc")
+auc.perf@y.values
+```
+
+
+6.What is the Sharpe Ratio across the period 10/22/2019 to 11/22/2019 for Amazon.com? (Please use arithmetic return and omit 10/22 when you calculate Sharpe Ratio, i.e.: only 23 data points are used to calculate Sharpe Ratio)
+```{r}
+df_6 <- read.csv('AMZN.csv';)
+
+
+```
+

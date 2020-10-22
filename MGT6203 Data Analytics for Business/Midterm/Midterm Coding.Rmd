@@ -1,0 +1,195 @@
+---
+title: "Midterm Coding"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library("ROCR")
+library(xts)
+library(PerformanceAnalytics)
+
+library(lubridate)
+library(tidyverse)
+library(stargazer)
+```
+
+
+```{r}
+library(ISLR)
+data("College")
+```
+```{r}
+str(College)
+```
+
+
+1. Estimate a linear regression model (using the lm function) with Personal as the dependent variable and Room.Board as the independent variable. What are the model’s R-squared and adjusted R-squared values?
+
+```{r}
+lm_1 <- lm(Personal~Room.Board, data=College)
+summary(lm_1)
+```
+```{r}
+summary(lm_1)[8]
+summary(lm_1)[9]
+
+```
+
+2. Based on the linear-linear regression model in the previous question (with Personal as the dependent variable and Room.Board as the independent variable), fit three nonlinear models using those two variables. Based on their adjusted R-squared values, which one of the four models is most appropriate to use?
+
+```{r}
+# Linear-log
+lm_2.1 <- lm(Personal~log(Room.Board), data=College)
+summary(lm_2.1)[9]
+
+# Log-Linear
+lm_2.2 <- lm(log(Personal)~Room.Board, data=College)
+summary(lm_2.2)[9]
+
+# Log-log
+lm_2.3 <- lm(log(Personal)~log(Room.Board), data=College)
+summary(lm_2.3)[9]
+
+```
+
+6-10
+Imagine you are interested in knowing how variables like GRE (Graduate Record Exam scores), GPA (Grade Point Average) etc affect admission into graduate school. The response variable, "admit” (admit/don’t admit), is a binary variable. Create a logistic regression model using the dataset binary.csv (Links to an external site.). Use the information from the model to answer the following five questions. Select the closest answer.
+
+
+```{r}
+admit_df <- read.csv('binary.csv', head=TRUE)
+str(admit_df)
+```
+
+```{r}
+lm_log <- glm(admit~gre+gpa, data=admit_df, family="binomial")
+summary(lm_log)
+```
+
+```{r}
+# make predictions using Model 4
+
+admit_df <-  admit_df %>% 
+  mutate(pred_prob_model4 = predict(lm_log, newdata = ., type = "response")) %>% 
+  mutate(pred_outcome_model4 = ifelse(pred_prob_model4 >= 0.5,1,0))
+
+#ROC Curve
+pred <- prediction(admit_df$pred_prob_model4,admit_df$admit) # create a prediction object in R
+class(pred)
+
+perf <- performance(pred, "tpr", "fpr") # tpr and fpr are true and false positive rates
+plot(perf, colorize=T)
+
+# calculate Area Under the Curve for this Logit Model
+auc.perf <-  performance(pred, measure = "auc")
+auc.perf@y.values
+```
+
+
+11-15
+```{r}
+bk <- read.csv("Berkshire.csv", head=TRUE)
+str(bk)
+```
+
+```{r}
+sd(bk$BrkRet, na.rm=TRUE)
+```
+
+```{r}
+mean(bk$BrkRet, na.rm=TRUE)
+```
+
+```{r}
+sd(bk$MKT, na.rm=TRUE)
+```
+```{r}
+bk$Date <- mdy(bk$Date) 
+df_bk <- xts(bk[,-1],order.by= bk[,1],)
+
+Return.cumulative(df_bk, geometric =TRUE)
+
+
+# Plot cumulative returns
+chart.CumReturns(df_bk, wealth.index =FALSE, geometric = TRUE, legend.loc='topleft')
+```
+
+```{r}
+table.Stats(df_bk)
+
+```
+
+
+
+```{r}
+(4143.99-96.22392)/500
+```
+```{r}
+SharpeRatio(df_bk, df_bk$RF)
+```
+
+17-18
+```{r}
+HT <- read.csv("Factor_HiTec.csv", head=TRUE)
+str(HT)
+```
+
+```{r}
+lm_factor6 <- lm(data=HT, HiTec ~ Mkt_rf+SMB+HML+Mom+BAB+QMJ)
+summary(lm_factor6)
+```
+19-20
+
+```{r}
+UK <- read.csv('UPS_KO.csv', head=TRUE)
+str(UK)
+```
+
+```{r}
+UK$Date <- parse_date(as.character(UK$Date), format = "%Y%m")
+str(UK)
+```
+
+```{r}
+df_UK <- UK[order(UK$Date),]
+```
+
+```{r}
+lm_3 <- lm(data=UK, UPS~Mkt_RF+SMB+HML)
+summary(lm_3)
+```
+
+```{r}
+lm_4 <- lm(data=UK, KO~Mkt_RF+SMB+HML)
+summary(lm_4)
+```
+
+```{r}
+df_UK <- xts(UK[,-1], order.by= UK[,1],)
+Return.cumulative(df_UK, geometric = TRUE)
+```
+
+```{r}
+table.Stats(df_UK)
+```
+
+
+
+
+```{r}
+nthroot(0.5518995+1,60)-nthroot(0.4195057+1,60)
+
+(0.5518995-0.4195057)/60
+
+```
+
+```{r}
+
+```
+
+
+

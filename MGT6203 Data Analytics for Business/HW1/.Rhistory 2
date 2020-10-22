@@ -1,0 +1,220 @@
+install.packages("ISLR")
+knitr::opts_chunk$set(echo = TRUE)
+data("Carseats")
+library(ISLR)
+data("Carseats")
+?lm
+library(ISLR)
+df = data("Carseats")
+str(df)
+force(Carseats)
+View(Carseats)
+str(Carseats)
+lm(Sales~CompPrice, Carseats)
+lm(Sales ~ CompPrice, data = Carseats)
+lm(Sales ~ Prices, data = Carseats)
+lm(Sales ~ Price, data = Carseats)
+lm_model =  lm(Sales ~ Price, data = Carseats)
+summary(lm_model)
+Carseats$Bad_Shelf = 0
+Carseats$Good_Shelf = 0
+Carseats$Bad_shelf[Carseats$ShelveLoc=='Bad']=1
+Carseats$Good_shelf[Carseats$ShelveLoc=='Good']=1
+data("Carseats")
+Carseats$Bad_Shelf = 0
+Carseats$Good_Shelf = 0
+Carseats$Bad_Shelf[Carseats$ShelveLoc=='Bad']=1
+Carseats$Good_Shelf[Carseats$ShelveLoc=='Good']=1
+lm_model_2 =  lm(Sales ~ Price+Bad_Shelf+Good_Shelf, data = Carseats)
+summary(lm_model_2)
+lm_model_3 = lm(Sales ~ Price + ShelveLoc, data=Carseats)
+summary(lm_model_3)
+getwd()
+url = '/Users/alex/Downloads/'
+df = read.csv(url + 'PriceDemand.csv')
+df = read.csv(url & 'PriceDemand.csv')
+df = read.csv(c(url,'PriceDemand.csv'))
+c(url, 'PriceDemand.csv')
+paste(url, 'PriceDemand.csv')
+paste(url, 'PriceDemand.csv', collapse = '')
+paste(url, 'PriceDemand.csv', sep = '')
+c(url, 'PriceDemand.csv', sep = '')
+url = '/Users/alex/Downloads/'
+file = paste(url, 'PriceDemand.csv', sep = '')
+df = read.csv(file, head=TRUE)
+str(df)
+lm_1 = lm(Qty ~ Price, data=df)
+summary(lm_1)
+plot(lm_1)
+lm_2 = lm(Qty ~ ln(Price), data=df)
+?log
+lm_2 = lm(Qty ~ log(Price), data=df)
+summary(lm_2)
+lm_3 = lm(log(Qty) ~ Price, data=df)
+summary(lm_3)
+lm_4 = lm(log(Qty) ~ log(Price), data=df)
+summary(lm_4)
+knitr::opts_chunk$set(echo = TRUE)
+data(cars)
+str(cars)
+speed(mph)
+?corr
+??corr
+?cor
+corr(cars$speed, cars$dist)
+cor(cars$speed, cars$dist)
+lm_1 = lm(dist ~ speed, data=cars)
+summary(lm_1)
+cars$speed_ms = cars$speed*1600/60/60
+cars$dist_m = cars$dist/3.2808
+lm_2 = lm(dist_m ~ speed_ms, data=cars)
+summary(lm_2)
+predict(lm_2, 7.5)
+?predict
+lm_2.predict(7.5)
+predict.lm(lm_2, 7.5)
+new.data <- data.frame(speed=7.5)
+predict.lm(lm_2, new.data, interval='confidence')
+new.data <- data.frame(speed_ms=7.5)
+predict.lm(lm_2, new.data, interval='confidence')
+?predict.lm
+predict.lm(lm_2, new.data, interval='predict')
+?level
+predict.lm(lm_2, new.data, interval='confidance', level=90)
+predict.lm(lm_2, new.data, interval='confidance', level=0.90)
+predict.lm(lm_2, new.data, interval='confidence', level=0.90)
+predict.lm(lm_2, new.data, interval='predict', level=0.90)
+install.packages('Ecdat')
+library(Ecdat)
+data(cars)
+library(Ecdat)
+data(cars)
+str(cars)
+cor(cars$speed, cars$dist)
+77.320 + (-14.007+0.141)+(-14.007+1.863)
+77.320 + (-14.007+0.141)+1.863
+library(MASS)
+dat <- Boston
+head(dat)
+model_lm <- lm(data=dat, medv ~ crim+zn+chas+nox+rm+dis+rad+tax+ptratio+black+lstat)
+plot(model_lm)
+shapiro.test(model_lm)
+shapiro.test(residuals(model_lm))
+install.packages('lmtest')
+require(lmtest)
+require(lmtest)
+dwtest(model_lm)
+EDSAL <- read.csv('\Users\alex\Downloads\EDSAL.csv')
+getwd
+getwd()
+EDSAL <- read.csv('/Users/alex/Downloads/EDSAL.csv')
+EDSAL <- read.csv('/Users/alex/Downloads/EDSAL.csv', header=TRUE)
+str(EDSAL)
+m1 <- lm(Salary ~ Experience, data = EDSAL)
+summary(m1)
+m2 <- lm(Salary ~ log(Experience), data = EDSAL)
+summary(m2)
+m3 <- lm(log(Salary) ~ Experience, data = EDSAL)
+summary(m3)
+m4 <- lm(log(Salary) ~ log(Experience), data = EDSAL)
+summary(m4)
+77.32 + 0.141 + 1.863 - 14.007
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("swirl")
+library("swirl")
+swirl()
+5+7
+if (!require(Ecdat)) install.packages("Ecdat")
+library(Ecdat)
+if (!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+if (!require(ISLR)) install.packages("ISLR")
+library(ISLR)
+if (!require(GGally)) install.packages("GGally")
+library(GGally)
+if (!require(car)) install.packages("car")
+library(car)
+?Housing # Show R Documentation
+summary(Housing)
+str(Housing)
+View(head(Housing,10))
+h1 <- data.frame(Housing$price, Housing$lotsize, Housing$bedrooms, Housing$bathrms)
+View(head(h1,15))
+pp <- Housing$price
+pricesd <- sd(pp)
+mean(Housing$price)
+median(Housing$price)
+res <- cor(h1) # correlation
+round(res,2)
+ggplot(data=Housing, aes(Housing$price)) +
+geom_histogram(breaks=seq(25000, 190000, by =10000),
+col="red",
+fill="green",
+alpha = .2) +
+labs(title="Histogram for price") +
+labs(x="price", y="Count")
+ggplot(data=Housing, aes(Housing$lotsize)) +
+geom_histogram(breaks=seq(0, 17000, by =1000),
+col="red",
+fill="green",
+alpha = .2) +
+labs(title="Histogram for lotsize") +
+labs(x="lotsize", y="Count")
+# Using ggpairs to get Correlation matrix along with with scatter plots
+summary(h1)
+ggpairs(h1,
+upper = list(continuous = wrap("cor", size = 9)))
+ggplot(Housing, aes(x=lotsize, y=price)) + geom_point() +
+scale_colour_hue(l=50) + # Use a slightly darker palette than normal
+geom_smooth(method=lm,   # Add linear regression lines
+se=FALSE,    # Don't add shaded confidence region
+fullrange=TRUE) # Extend regression lines
+a.lm <- lm(formula = price ~ lotsize , data = Housing)
+summary(a.lm) # what does this command do?
+anova(a.lm)   # what does this command do?
+?anova
+setwd("~/Desktop")
+knitr::opts_chunk$set(echo = TRUE)
+read.csv("PriceDemand.csv", header=True)
+list.dir()
+list.files()
+read.csv("PriceDemand.csv")
+read.csv("PriceDemand.csv")
+read.csv("PriceDemand.csv")
+setwd("~/Google Drive/MS Analytics/GT OMSA/SP20 MGMT 6203/HW1")
+setwd("~/Google Drive/MS Analytics/GT OMSA/SP20 MGMT 6203/HW1")
+read.csv("PriceDemand.csv")
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/MS Analytics/GT OMSA/SP20 MGMT 6203/HW1")
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/MS Analytics/GT OMSA/SP20 MGMT 6203/HW1")
+read.csv("PriceDemand.csv")
+list.files()
+read.csv("PriceDemand.csv")
+df_pd <- read.csv("PriceDemand.csv", header=True)
+df_pd <- read.csv("PriceDemand.csv", header=TRUE)
+lm_s3 = lm(Qty~Price, data=df_pd)
+lm_s3 = lm(Qty~Price, data=df_pd)
+summary(lm_s3)
+summary(lm_s3)$coefficients[2]
+plot(lm_s3)
+df_pd$Price_ln <- log(df_pd$Price)
+lm_s4 = lm(Qty~Price_ln, data=df_pd)
+summary(lm_s4)
+df_pd$Qty_ln <- log(df_pd$Qty)
+lm_s5 = lm(Qty_ln~Price, data=df_pd)
+summary(lm_s5)
+lm_s6 = lm(Qty_ln~Price_ln, data=df_pd)
+summary(lm_s6)
+library(Ecdat)
+data(cars)
+str(cars)
+library(Ecdat)
+data(cars)
+str(cars)
+cor(cars$speed, cars$dist)
+lm_hw_1 = lm(dist ~ speed, data=cars)
+summary(lm_hw_1)
+cars$speed_ms = cars$speed*1600/60/60
+cars$dist_m = cars$dist/3.2808
+lm_hw_2 = lm(dist_m ~ speed_ms, data=cars)
+summary(lm_hw_2)
+1/3.2808

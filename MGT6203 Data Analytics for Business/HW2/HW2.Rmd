@@ -1,0 +1,75 @@
+---
+title: "HW2 Solution"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+First, build a model using salary as the response and Ht and Exp as variables and denote it as Model_1.  Build a second model using log(salary) as the response and Ht and Exp as variables, we denote it as Model_2.
+```{r}
+nba = read.csv("nba2017.csv", header = TRUE)
+```
+
+```{r}
+str(nba)
+```
+
+First, build a model using salary as the response and Ht and Exp as variables and denote it as Model_1.  Build a second model using log(salary) as the response and Ht and Exp as variables, we denote it as Model_2.
+
+```{r}
+Model_1 <- lm(data=nba, Salary ~ Ht + Exp)
+summary(Model_1)
+```
+
+```{r}
+Model_2 <- lm(data=nba, log(Salary) ~ Ht + Exp)
+summary(Model_2)
+```
+
+```{r}
+eitc = read.csv("eitc.csv", header = TRUE)
+str(eitc)
+```
+
+
+```{r}
+eitc$postbill= as.numeric(eitc$year >1993)
+eitc$kids = as.numeric(eitc$children >=1)
+```
+
+
+```{r}
+colnames(eitc)
+```
+
+
+```{r}
+str(eitc)
+```
+
+```{r}
+
+before_no_kid <- subset(eitc, eitc$postbill==0 & eitc$kids == 0)
+before_has_kid <- subset(eitc, eitc$postbill==0 & eitc$kids == 1)
+after_no_kid <- subset(eitc, eitc$postbill==1 & eitc$kids == 0)
+after_has_kid <- subset(eitc, eitc$postbill==1 & eitc$kids == 1)
+
+```
+
+```{r}
+A = mean(before_no_kid$work)
+C = mean(before_has_kid$work)
+B = mean(after_no_kid$work)
+D = mean(after_has_kid$work)
+
+(D-B)-(C-A)
+```
+
+```{r}
+
+```
+

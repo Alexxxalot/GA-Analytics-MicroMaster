@@ -1,0 +1,33 @@
+---
+title: "HW3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/MS Analytics/GT OMSA/SP20 MGMT 6203/HW3")
+```
+
+```{r}
+ad = read.csv('Advertising_Updated.csv')
+```
+
+```{r}
+lm <- lm(Sales~., data=ad)
+summary(lm)
+```
+
+```{r}
+new.dat <- data.frame(TV=200, Radio=10, Newspaper=20)
+```
+
+```{r}
+predict(lm, new.dat, interval="prediction",level=0.95)
+```
+
+
+
+

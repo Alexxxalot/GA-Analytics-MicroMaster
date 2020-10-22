@@ -1,0 +1,103 @@
+---
+title: "SA9"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyverse)
+
+library(fpp2)
+library(xts)
+
+```
+
+
+```{r include=FALSE}
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/MS Analytics/GT OMSA/SP20 MGMT 6203/Wk14")
+```
+
+```{r}
+df <- read.csv('householdpower.csv', header=TRUE)
+```
+
+```{r}
+str(df)
+```
+
+```{r}
+head(df,size=10)
+```
+
+
+```{r}
+df$Date <- as.POSIXct(df$Date, format = "%d/%m/%Y")
+class(df$Date)
+```
+
+```{r}
+min(df$Date)
+```
+
+```{r}
+max(df$Date)
+```
+
+```{r}
+df_2 <- df %>% 
+  mutate(total_active_energy = Global_active_power*1000/60-Sub_metering_1-Sub_metering_2-Sub_metering_3) %>% 
+  group_by(Date) %>% 
+  summarize_each(sum, total_active_energy)
+
+head(df_2,10)
+```
+
+```{r}
+mean(df_2$total_active_energy, na.rm=TRUE)
+```
+
+
+```{r}
+df_3 <- na.locf(df_2)
+df_4 <- xts(df_3[,-1], order.by=df_3$Date)
+```
+
+```{r}
+ses_df <- ses(df_4, alpha = 0.35, h = 100)
+autoplot(ses_df)
+```
+```{r}
+accuracy(ses_df)
+```
+
+```{r}
+alpha <- seq(.01, .99, by = .01)
+RMSE <- NA
+
+for(i in seq_along(alpha)) {
+  accuracy_table = accuracy(ses(df_4, alpha = alpha[i], h = 100))
+  RMSE[i] <- accuracy_table[1,2]
+}
+
+alpha.fit <- data_frame(alpha, RMSE)
+head(alpha.fit,10)
+```
+```{r}
+min(alpha.fit$RMSE)
+```
+
+```{r}
+alpha.fit %>% 
+  filter(RMSE == min(RMSE))
+```
+
+```{r}
+plot(alpha.fit)
+```
+
+
+

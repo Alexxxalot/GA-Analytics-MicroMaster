@@ -1,0 +1,276 @@
+---
+title: "HW3 Part2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Packages, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+
+# 5-8
+library(readr)
+library(tidyverse)
+library(correlationfunnel)
+library(DataExplorer)
+library(WVPlots)
+library(ggthemes)
+library(ROCR)
+library(caret)
+library(corrplot)
+
+library(gridExtra)
+```
+
+#### Q1 - Q4 ####
+
+Load the dataset as below:
+```{r Read Data}
+data <- read.csv("KAG.csv", stringsAsFactors = FALSE)
+```
+
+```{r Summary}
+str(data)
+```
+
+
+```{r}
+colnames(data)
+```
+
+```{r}
+summary(data)
+```
+
+
+##### Q.1 Which ad (provide ad_id as the answer) among the ads that have the least CPC led to the most impressions? #####
+
+```{r}
+data %>%
+  filter (CPC == min(CPC)) %>% 
+  filter (Impressions == max(Impressions)) %>% 
+  select(ad_id, CPC, Impressions)
+```
+
+Answer: ad_id = 1121094
+
+##### Q.2 What campaign (provide campaign_id as the answer) had spent least efficiently on brand awareness on an average(i.e. most Cost per mille or CPM: use total cost for the campaign / total impressions in thousands)? #####
+
+```{r}
+data %>% 
+  group_by(campaign_id) %>% 
+  summarise_each(sum, Spent, Impressions) %>% 
+  mutate(Efficiency = Spent/Impressions*1000) %>% 
+  arrange(desc(Efficiency))
+```
+Answer: Campaign_id 936 had spent least efficiently on brand awareneww on an average
+
+##### Q.3 Assume each conversion (‘Total_Conversion’) is worth $5, each approved conversion (‘Approved_Conversion’) is worth $50. ROAS (return on advertising spent) is revenue as a percentage of the advertising spent . Calculate ROAS and round it to two decimals. #####
+
+##### Make a boxplot of the ROAS grouped by gender for interest = 15, 21, 101 (or interest_id = 15, 21, 101) in one graph. Also try to use the function ‘+ scale_y_log10()’ in ggplot to make the visualization look better (to do so, you just need to add ‘+ scale_y_log10()’ after your ggplot function). The x-axis label should be ‘Interest ID’ while the y-axis label should be ROAS. #####
+
+```{r}
+df_3 <- data %>% 
+  filter(interest %in% c(15,21,101), Spent !=0) %>% 
+  mutate(ROAS = round((5*Total_Conversion + 50*Approved_Conversion)/Spent,2)) %>%
+  select(interest, gender, ROAS) %>% 
+  mutate(gender = as.factor(gender)) %>% 
+  mutate(interest = as.factor(interest))
+
+
+ggplot(data=df_3, mapping = aes(x=interest, y=ROAS, fill=gender))+
+  geom_boxplot()+
+  scale_y_log10()+
+  xlab('Interest ID')+
+  ylab('ROAS')+
+  ggtitle('ROAS By Gender')+
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'bottom')
+```
+
+##### Q.4 Summarize the median and mean of ROAS by genders when campaign_id == 1178. #####
+
+```{r}
+data %>% 
+  filter(campaign_id == 1178, Spent != 0) %>% 
+  mutate(ROAS = round((5*Total_Conversion + 50*Approved_Conversion)/Spent,2)) %>%
+  mutate(gender = as.factor(gender)) %>% 
+  select(campaign_id, gender,ROAS) %>%
+  group_by(gender) %>% 
+  summarize(mean_ROAS = mean(ROAS), median_ROAS = median(ROAS))
+```
+
+##### Q5-Q8 #####
+
+Load the advertising1 (Links to an external site.) dataset using readr.
+```{r}
+df_ad = read_csv('advertising1.csv', col_names=TRUE, col_types='nnnnccfcTf')
+```
+
+```{r}
+str(df_ad)
+```
+
+
+##### Q5 #####
+a) We aim to explore the dataset so that we can better choose a model to implement. Plot histograms for at least 2 of the continuous variables in the dataset. Note it is acceptable to plot more than 2. [1 point]
+
+```{r}
+# Histogram of continuous variables Age
+p1 <- ggplot(data=df_ad, aes(x=Age))+
+  geom_histogram(bins=20)+
+  ggtitle('Histogram of Age')+
+  theme(text = element_text(size=8))
+
+# Histogram of continuous variable Area Income
+p2 <- ggplot(data=df_ad, aes(x=`Area Income`))+
+  geom_histogram(bins=20)+
+  ggtitle('Histogram of Area Income')+
+  theme(text = element_text(size=8))
+
+# Histogram of continuous variables Daily Time Spent on Site
+p3 <- ggplot(data=df_ad, aes(x=`Daily Time Spent on Site`))+
+  geom_histogram(bins=20)+
+  ggtitle('Histogram of Daily Time Spent on Site')+
+  theme(text = element_text(size=8))
+
+# Histogram of continuous variable Area Income
+p4 <- ggplot(data=df_ad, aes(x=`Daily Internet Usage`))+
+  geom_histogram(bins=20)+
+  ggtitle('Histogram of Daily Internet Usage')+
+  theme(text = element_text(size=8))
+
+
+grid.arrange(p1, p2, p3, p4, nrow=2, ncol=2)
+```
+
+
+b) Again on the track of exploring the dataset, plot at least 2 bar charts reflecting the counts of different values for different variables. Note it is acceptable to plot more than 2. [1 point]
+
+```{r}
+p5 <- ggplot(data=df_ad, aes(x=Male))+
+  geom_bar()+
+  ggtitle('Bar Chart of Gender')
+
+p6 <- ggplot(data=df_ad, aes(x=`Clicked on Ad`))+
+  geom_bar()+
+  ggtitle('Bar Chart of Clicked On Ad')
+
+
+grid.arrange(p5, p6, nrow=1, ncol=2)
+```
+
+
+c) Plot boxplots for Age, Area.Income, Daily.Internet.Usage and Daily.Time.Spent.on.Site separated by the variable Clicked.on.Ad. To clarify, we want to create 4 plots, each of which has 2 boxplots: 1 for people who clicked on the ad, one for those who didn’t. [2 points]
+
+```{r}
+pc1 <- ggplot(data=df_ad, aes(y=Age, x=`Clicked on Ad`))+
+  geom_boxplot()+
+  ggtitle('Boxplot of Age')+
+  theme(text = element_text(size=8))
+
+pc2 <- ggplot(data=df_ad, aes(y=`Area Income`, x=`Clicked on Ad`))+
+  geom_boxplot()+
+  ggtitle('Boxplot of Area Income')+
+  theme(text = element_text(size=8))
+
+pc3 <- ggplot(data=df_ad, aes(y=`Daily Internet Usage`, x=`Clicked on Ad`))+
+  geom_boxplot()+
+  ggtitle('Boxplot of Daily Internet Usage')+
+  theme(text = element_text(size=8))
+
+pc4 <- ggplot(data=df_ad, aes(y=`Daily Time Spent on Site`, x=`Clicked on Ad`))+
+  geom_boxplot()+
+  ggtitle('Boxplot of Daily Time Spent on Site')+
+  theme(text = element_text(size=8))
+
+
+grid.arrange(pc1, pc2, pc3, pc4, nrow=2, ncol=2)
+```
+
+
+d) Based on our preliminary boxplots, would you expect an older person to be more likely to click on the ad than someone younger? 
+
+Answer:
+Yes, from the box plot of Age by Clicked.on.Ad, older person is more likely to click on the ad than younger person.
+
+
+##### Q6 #####
+
+Part (a) [3 points]
+1. Make a scatter plot for Area.Income against Age. Separate the datapoints by different shapes based on if the datapoint has clicked on the ad or not.
+
+```{r}
+ggplot(df_ad, aes(x=Age, y=`Area Income`,shape=`Clicked on Ad`,color=`Clicked on Ad`))+
+  geom_point()
+```
+
+2. Based on this plot, would you expect a 31-year-old person with an Area income of $62,000 to click on the ad or not?
+
+Answer:
+No, based on the plot that area is more likely has no click.
+
+
+Part (b) [3 points]
+
+1. Similar to part a), create a scatter plot for Daily.Time.Spent.on.Site against Age. Separate the datapoints by different shapes based on if the datapoint has clicked on the ad or not.
+
+```{r}
+ggplot(df_ad, aes(x=Age, y=`Daily Time Spent on Site`,shape=`Clicked on Ad`,color=`Clicked on Ad`))+
+  geom_point()
+```
+
+2. Based on this plot, would you expect a 50-year-old person who spends 60 minutes daily on the site to click on the ad or not?
+
+Answer:
+Yes, 50 year old and 60 mins is more likely to click.
+
+##### Q7 #####
+Part (a)
+1. Now that we have done some exploratory data analysis to get a better understanding of our raw data, we can begin to move towards designing a model to predict advert clicks.
+2. Generate a correlation funnel (using the correlation funnel package) to see which of the variable in the dataset have the most correlation with having clicked the advert.
+NOTE: Here we are creating the correlation funnel in regards to HAVING clicked the advert, rather than not. This will lead to a minor distinction in your code between the 2 cases. However, it will not affect your results and subsequent variable selection.
+
+```{r}
+
+names(df_ad) <- gsub(' ','.',names(df_ad))
+
+df_ad %>%
+  #select(-c(Ad.Topic.Line,City,Country,Timestamp)) %>%
+  select(-Timestamp) %>% 
+  mutate_if(is.numeric,as.numeric) %>%
+  binarize() %>%
+  correlate(Clicked.on.Ad__1) %>%
+  plot_correlation_funnel(interactive = TRUE)
+```
+
+Part (b)
+
+1. Based on the generated correlation funnel, choose the 4 most covarying variables (with having clicked the advert) and run a logistic regression model for Clicked.on.Ad using these 4 variables.
+2. Output the summary of this model.
+
+```{r}
+lm_a = glm(Clicked.on.Ad~Daily.Internet.Usage+Daily.Time.Spent.on.Site+Age+Area.Income,data=df_ad, family = 'binomial')
+summary(lm_a)
+```
+
+##### Q8 #####
+Now using the caret package, create a confusion matrix for the model predictions and actual clicks. Note you do not need to graph or plot this confusion matrix.
+How many false-negative occurrences do you observe? Recall false negative means the instances where the model predicts the case to be false when in reality it is true. For this example, this refers to cases where the ad is clicked but the model predicts that it isn’t
+
+```{r}
+
+df_ad$predict_prob <- predict(lm_a, df_ad, type='response')
+
+df_predict <-df_ad %>% 
+  mutate(predict_click = if_else(predict_prob>0.8,1,0)) %>% 
+  mutate(predict_click = as.factor(predict_click))
+
+confusionMatrix(df_predict$predict_click,df_predict$Clicked.on.Ad)
+```
+
+Answer:
+The false negative is reference as 1 and prediction as 0.
+Based on the matrix, the false negative case is 36.
