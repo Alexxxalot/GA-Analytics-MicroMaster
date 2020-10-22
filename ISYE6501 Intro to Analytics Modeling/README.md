@@ -1,6 +1,6 @@
-# ISYE6501-Intro-to-Analytics-Modeling
+# ISYE6501 Intro to Analytics Modeling
  
-https://www.edx.org/course/introduction-to-analytics-modeling
+[Edx Course Page](https://www.edx.org/course/introduction-to-analytics-modeling)
 
 ### Course Intro:
 Analytical models are key to understanding data, generating predictions, and making business decisions. Without models it’s nearly impossible to gain insights from data. In modeling, it’s essential to understand how to choose the right data sets, algorithms, techniques and formats to solve a particular business problem.
