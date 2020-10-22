@@ -1,6 +1,9 @@
 # CSE6040 Computing for Data Analysis
  
-[Edx Course Page](https://www.edx.org/course/computing-for-data-analysis)
+ [Edx Course Page](https://www.edx.org/course/computing-for-data-analysis)
+
+[Syllabus Fall2019](https://github.com/Alexxxalot/GA-Analytics-MicroMaster/blob/main/CSE6040%20Computing%20for%20Data%20Analysis/Syllabus__Final__-_CSE_6040-x-_Intro_to..._for_Data_Analysis__Fall_2019_-_HackMD.pdf)
+
 
 ### Course Intro:
 The modern data analysis pipeline involves collection, preprocessing, storage, analysis, and interactive visualization of data.  
