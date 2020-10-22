@@ -1,29 +1,12 @@
-# ISYE6501-Intro-to-Analytics-Modeling
+# CSE6040 Computing for Data Analysis
  
-https://www.edx.org/course/introduction-to-analytics-modeling
+[Edx Course Page](https://www.edx.org/course/computing-for-data-analysis)
 
 ### Course Intro:
-Analytical models are key to understanding data, generating predictions, and making business decisions. Without models it’s nearly impossible to gain insights from data. In modeling, it’s essential to understand how to choose the right data sets, algorithms, techniques and formats to solve a particular business problem.
+The modern data analysis pipeline involves collection, preprocessing, storage, analysis, and interactive visualization of data.  
 
-In this course, part of the Analytics: Essential Tools and Methods MicroMasters program, you’ll gain an intuitive understanding of fundamental models and methods of analytics and practice how to implement them using common industry tools like R.
+The goal of this course, part of the Analytics: Essential Tools and Methods MicroMasters program, is for you to learn how to build these components and connect them using modern tools and techniques.  
 
-You’ll learn about analytics modeling and how to choose the right approach from among the wide range of options in your toolbox.
+In the course, you’ll see how computing and mathematics come together. For instance, “under the hood” of modern data analysis lies numerical linear algebra, numerical optimization, and elementary data processing algorithms and data structures. Together, they form the foundations of numerical and data-intensive computing.  
 
-You will learn how to use statistical models and machine learning as well as models for:
-
-classification;  
-clustering;  
-change detection;  
-data smoothing;  
-validation;  
-prediction;  
-optimization;  
-experimentation;  
-decision making.  
-
-
-### What you'll learn
-
-* Fundamental analytics models and methods
-* How to use analytics software, including R, to implement various types of models
-* Understanding of when to apply specific analytics models
+The hands-on component of this course will develop your proficiency with modern analytical tools. You will learn how to mash up Python, R, and SQL through Jupyter notebooks, among other tools. Furthermore, you will apply these tools to a variety of real-world datasets, thereby strengthening your ability to translate principles into practice.  
