@@ -4,7 +4,7 @@
 #### Completed Course:
 [ISYE6501: Introduction to Analytics Modeling](https://github.com/Alexxxalot/GA-Analytics-MicroMaster/tree/main/ISYE6501%20Intro%20to%20Analytics%20Modeling) <br> 
 [CSE6040: Computing for Data Analysis](https://github.com/Alexxxalot/GA-Analytics-MicroMaster/tree/main/CSE6040%20Computing%20for%20Data%20Analysis) <br>
-MGT6203: Data Analytics in Business <br>
+[MGT6203: Data Analytics in Business](https://github.com/Alexxxalot/GA-Analytics-MicroMaster/tree/main/MGT6203%20Data%20Analytics%20for%20Business)<br>
 
 <br>
 
