@@ -18,9 +18,9 @@ The hands-on component of this course will develop your proficiency with modern 
 * Module 0: Python Fundamentals
 * Module 1: Representing, transforming, and visualizing data
 * Module 2: The analysis of data
--- Numerical computing: Numpy/Scipy
--- Ranking relational objects 
--- Linear regression
--- Classification
--- Clustering
--- Compression
+-- Numerical computing: Numpy/Scipy  
+-- Ranking relational objects  
+-- Linear regression  
+-- Classification  
+-- Clustering  
+-- Compression  
