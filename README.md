@@ -7,6 +7,6 @@ CSE6040: Computing for Data Analysis <br>
 MGT6203: Data Analytics in Business <br>
 
 <br>
-<br>
-![](https://github.com/Alexxxalot/GA-Analytics-MicroMaster/blob/main/Readme/MicroMasterPage.png?raw=true)
+
+![WebPageIntro](https://github.com/Alexxxalot/GA-Analytics-MicroMaster/blob/main/Readme/MicroMasterPage.png?raw=true)
 
