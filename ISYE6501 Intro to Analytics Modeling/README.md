@@ -27,3 +27,13 @@ decision making.
 * Fundamental analytics models and methods
 * How to use analytics software, including R, to implement various types of models
 * Understanding of when to apply specific analytics models
+
+### Topics
+* Classification
+* Validation
+* Exponential Smoothing
+* Basic Regression
+* Variable Selection
+* Design of Experiments
+* Probability-Based Models
+* Optimization
